@@ -1,29 +1,15 @@
-Feature: User Login Functionality
+Feature: Login Functionality on Practice Test Automation Site
 
-  As a user of the practice website,
-  I want to log in successfully and be rejected when I use bad credentials,
-  So that I can verify the security and access controls of the application.
+  Scenario Outline: Verify Login with various credentials from Excel
+    Given the user is on the login page
+    When the user enters credentials for scenario "<scenario_name>"
+    And clicks the login button
+    Then the user should see the message "<expected_result_text>" on the page
 
-  @smoke
-  Scenario: Successful Login with Valid Credentials
-    Given I am on the login page
-    When I enter username "student" and password "Password123"
-    And I click the login button
-    Then I should be logged in successfully
-    And I should see the welcome message "Congratulations!"
-    
-  @regression
-  Scenario: Login Fails with Invalid Password
-    Given I am on the login page
-    When I enter username "student" and password "WrongPassword"
-    And I click the login button
-    Then I should not be logged in successfully
-    And I should see the error message "Your username is invalid!"
-    
-  @regression
-  Scenario: Login Fails with Empty Username and Password
-    Given I am on the login page
-    When I enter username "" and password ""
-    And I click the login button
-    Then I should not be logged in successfully
-    And I should see the error message "Your username is invalid!"
+    Examples:
+      # The scenario_name will be used to look up the actual username/password in Excel
+      # The expected_result_text will be asserted in the Step Definition
+      | scenario_name            | expected_result_text                         |
+      | Successful Login         | Congratulations! You successfully logged in! |
+      | Invalid Username Login   | Your username is invalid!                    |
+      | Invalid Password Login   | Your password is invalid!                    |

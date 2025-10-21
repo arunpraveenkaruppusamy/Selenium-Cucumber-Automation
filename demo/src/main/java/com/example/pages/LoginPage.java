@@ -2,39 +2,45 @@ package com.example.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 public class LoginPage {
-    private final WebDriver driver;
+    private WebDriver driver;
+    private final String LOGIN_URL = "https://practicetestautomation.com/practice-test-login/";
 
-    // 1. Locators (The 'where' on the page)
-    private final By usernameField = By.id("username");
-    private final By passwordField = By.id("password");
-    private final By submitButton = By.id("submit");
-    private final By successMessage = By.className("post-title");
-    private final By errorMessage = By.id("error");
+    // Locators
+    private By usernameField = By.id("username");
+    private By passwordField = By.id("password");
+    private By loginButton = By.id("submit");
+    private By messageText = By.id("error"); // This ID holds the failure message
 
-    // Constructor to receive the driver
+    // Constructor
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    // 2. Actions (The 'what' we do on the page)
+    // Actions (Methods referenced in LoginSteps)
+    public void navigateToLoginPage() {
+        driver.get(LOGIN_URL);
+    }
+
     public void enterCredentials(String username, String password) {
-        // Find element and type
         driver.findElement(usernameField).sendKeys(username);
         driver.findElement(passwordField).sendKeys(password);
     }
 
-    public void clickSubmit() {
-        driver.findElement(submitButton).click();
+    public void clickLoginButton() {
+        driver.findElement(loginButton).click();
     }
 
-    // 3. Verification/Getters (The 'result')
-    public String getSuccessMessageText() {
-        return driver.findElement(successMessage).getText();
-    }
-
-    public String getErrorMessageText() {
-        return driver.findElement(errorMessage).getText();
+    // Synchronized method to get the message text
+    public String getMessageText() {
+        // Wait up to 10 seconds until the message text element is present and visible
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(messageText));
+        
+        return driver.findElement(messageText).getText();
     }
 }
